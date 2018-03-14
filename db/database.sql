@@ -42,11 +42,11 @@ CREATE TABLE adoptables (
 );
 
 INSERT INTO users (username, email, password_digest, bio, profile_pic)
-  VALUES ('matt', 'matt@mail.com', '123', '3 wolf moon retro authentic banh mi blog. Pug 8-bit seitan, vinyl snackwave pork belly chicharrones +1 cornhole.', 'https://res.cloudinary.com/airwotever/image/upload/v1395969197/default-profile-pic_hkmqpe.png'),
-  ('ozzy', 'ozzy@mail.com', '123', 'Keffiyeh everyday carry four dollar toast DIY, wolf knausgaard banjo pour-over actually lyft bespoke pok pok readymade sustainable.', 'https://res.cloudinary.com/airwotever/image/upload/v1395969197/default-profile-pic_hkmqpe.png'),
-  ('hannah', 'hannah@mail.com', '123', 'Salvia health goth before they sold out kale chips, taxidermy deep v vape selvage occupy glossier offal air plant.', 'https://res.cloudinary.com/airwotever/image/upload/v1395969197/default-profile-pic_hkmqpe.png'),
-  ('luke', 'luke@mail.com', '123', 'Vice etsy hell of, meggings hammock williamsburg VHS artisan meditation tofu blue bottle readymade listicle bushwick.', 'https://res.cloudinary.com/airwotever/image/upload/v1395969197/default-profile-pic_hkmqpe.png'),
-  ('sam', 'sam@mail.com', '123', 'Cornhole vape edison bulb cold-pressed messenger bag, cray lomo kickstarter YOLO schlitz.', 'https://res.cloudinary.com/airwotever/image/upload/v1395969197/default-profile-pic_hkmqpe.png');
+  VALUES ('matt', 'matt@mail.com', '$2a$10$AfpU.q2VmSjewNfqHIimLODqFMPh4r/nOWcVauBNi10ByxQOprD7G', '3 wolf moon retro authentic banh mi blog. Pug 8-bit seitan, vinyl snackwave pork belly chicharrones +1 cornhole.', 'https://res.cloudinary.com/airwotever/image/upload/v1395969197/default-profile-pic_hkmqpe.png'),
+  ('ozzy', 'ozzy@mail.com', '$2a$10$AfpU.q2VmSjewNfqHIimLODqFMPh4r/nOWcVauBNi10ByxQOprD7G', 'Keffiyeh everyday carry four dollar toast DIY, wolf knausgaard banjo pour-over actually lyft bespoke pok pok readymade sustainable.', 'https://res.cloudinary.com/airwotever/image/upload/v1395969197/default-profile-pic_hkmqpe.png'),
+  ('hannah', 'hannah@mail.com', '$2a$10$AfpU.q2VmSjewNfqHIimLODqFMPh4r/nOWcVauBNi10ByxQOprD7G', 'Salvia health goth before they sold out kale chips, taxidermy deep v vape selvage occupy glossier offal air plant.', 'https://res.cloudinary.com/airwotever/image/upload/v1395969197/default-profile-pic_hkmqpe.png'),
+  ('luke', 'luke@mail.com', '$2a$10$AfpU.q2VmSjewNfqHIimLODqFMPh4r/nOWcVauBNi10ByxQOprD7G', 'Vice etsy hell of, meggings hammock williamsburg VHS artisan meditation tofu blue bottle readymade listicle bushwick.', 'https://res.cloudinary.com/airwotever/image/upload/v1395969197/default-profile-pic_hkmqpe.png'),
+  ('sam', 'sam@mail.com', '$2a$10$AfpU.q2VmSjewNfqHIimLODqFMPh4r/nOWcVauBNi10ByxQOprD7G', 'Cornhole vape edison bulb cold-pressed messenger bag, cray lomo kickstarter YOLO schlitz.', 'https://res.cloudinary.com/airwotever/image/upload/v1395969197/default-profile-pic_hkmqpe.png');
 
 INSERT INTO adoptables (name, breed, age, sex, url)
   VALUES ('Max', 'Golden Retriever', 4, 'M', 'www.thorry.io'),
@@ -54,13 +54,13 @@ INSERT INTO adoptables (name, breed, age, sex, url)
 
 INSERT INTO photos (caption, url, user_id, username)
   VALUES ('lovin life!', 'https://c1.staticflickr.com/8/7339/12413787454_89113147e6_b.jpg', 1, 'matt'),
-  ('yay!', 'https://c1.staticflickr.com/8/7339/12413787454_89113147e6_b.jpg', 1, 'matt'),
-  ('fun', 'https://c1.staticflickr.com/8/7339/12413787454_89113147e6_b.jpg', 1, 'matt'),
-  ('lovin life more!', 'https://c1.staticflickr.com/8/7339/12413787454_89113147e6_b.jpg', 1, 'matt'),
+  ('yay!', 'https://i.amz.mshcdn.com/zA7eX2PjjIb_K9ZoUpMuolBd2B4=/950x534/filters:quality(90)/https%3A%2F%2Fblueprint-api-production.s3.amazonaws.com%2Fuploads%2Fcard%2Fimage%2F683814%2Fc9aebd63-fc52-48a4-9ddf-1bca18375608.jpg', 1, 'matt'),
+  ('fun', 'https://pics.me.me/doggos-what-did-we-ever-do-to-deserve-you-%F0%9F%98%A2-4590689.png', 1, 'matt'),
+  ('lovin life more!', 'https://az616578.vo.msecnd.net/files/2016/08/22/6360750671681651291985063401_2f48cf84fdd0ef751a79d8e22e8b4db229878f8bfd5fb415421e5d2ba7b093f5_1.jpg', 1, 'matt'),
   ('lovin life!', 'https://c1.staticflickr.com/8/7339/12413787454_89113147e6_b.jpg', 2, 'ozzy'),
-  ('yay!', 'https://c1.staticflickr.com/8/7339/12413787454_89113147e6_b.jpg', 2, 'ozzy'),
+  ('yay!', 'https://i.pinimg.com/736x/cc/d5/92/ccd592406f11ad57efbe871c5e71b19e--kawaii-fashion-taco-tuesday.jpg', 2, 'ozzy'),
   ('fun', 'https://c1.staticflickr.com/8/7339/12413787454_89113147e6_b.jpg', 2, 'ozzy'),
-  ('lovin life more!', 'https://c1.staticflickr.com/8/7339/12413787454_89113147e6_b.jpg', 2, 'ozzy');
+  ('lovin life more!', 'https://media.tenor.com/images/2e134ea071498a68c777d5540b65fecd/tenor.gif', 2, 'ozzy');
 
 INSERT INTO likes (username, photo_id)
   VALUES ('matt', 5), ('matt', 6), ('matt', 7), ('matt', 8), ('ozzy', 1), ('hannah', 8), ('sam', 8), ('sam', 1), ('luke', 8), ('luke', 1);

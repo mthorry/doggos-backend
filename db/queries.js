@@ -1,12 +1,12 @@
-var promise = require('bluebird');
-var options = { promiseLib: promise };
-var pgp = require('pg-promise')(options);
-var connectionString = 'postgres://localhost:5432/doggos';
-var db = pgp(connectionString);
-
+const promise = require('bluebird');
+const options = { promiseLib: promise };
+const pgp = require('pg-promise')(options);
+const connectionString = 'postgres://localhost:5432/doggos';
+const db = pgp(connectionString);
+const authHelpers = require("../auth/helpers");
+const passport = require("../auth/local");
 
 // PHOTOS ===========================================================================
-
 function getAllPhotos(req, res, next) {
   let username = req.params.username
   db.any('SELECT * FROM photos WHERE username = $1', username)
@@ -38,8 +38,9 @@ function getSinglePhoto(req, res, next) {
 }
 
 function createPhoto(req, res, next) {
-  req.body.user_id = parseInt(req.body.user_id)
-  db.none('INSERT INTO photos(caption, url, user_id)' + 'VALUES (${caption}, ${url}, ${user_id}', req.body)
+  let user_id = parseInt(req.user.id)
+  db.none('INSERT INTO photos(caption, url, user_id, username) VALUES ($1, $2, $3, $4)', 
+    [req.body.caption, req.body.url, user_id, req.params.username])
     .then( function() {
       res.status(200)
         .json({
@@ -53,8 +54,8 @@ function createPhoto(req, res, next) {
 }
 
 function updatePhoto(req, res, next) {
-  db.none('UPDATE photos SET caption=$1, url=$2',
-    [req.body.caption, req.body.url]
+  db.none('UPDATE photos SET caption=$1, url=$2 WHERE id=$3',
+    [req.body.caption, req.body.url, req.params.photo_id]
     )
     .then(function () {
       res.status(200)
@@ -69,7 +70,7 @@ function updatePhoto(req, res, next) {
 }
 
 function removePhoto(req, res, next) {
-    var photoId = parseInt(req.params.photo_id);
+    const photoId = parseInt(req.params.photo_id);
   db.result('DELETE FROM photos WHERE id = $1', photoId)
     .then(function (result) {
       res.status(200)
@@ -85,12 +86,11 @@ function removePhoto(req, res, next) {
 
 
 // LIKES ===========================================================================
-
 function likePhoto(req, res, next) {
   db
-    .none("INSERT INTO likes (liker_id, photo_id)" + "VALUES(${liker}, ${photo})", {
-      liker: req.user.id,
-      photo: req.body.photo_id
+    .none('INSERT INTO likes (username, photo_id) VALUES(${liker}, ${photo})', {
+      liker: req.user.username,
+      photo: req.params.photo_id
     })
     .then(data => {
       res.status(200).json({
@@ -130,13 +130,16 @@ function getPhotoLikes(req, res, next) {
 }
 
 
-// FOLLOWS ===========================================================================
 
+// FOLLOWS ===========================================================================
 function addFollower(req, res, next) {
   db
     .none(
       "INSERT INTO follows (follower_username, followed_username) VALUES(${follower_username}, ${followed_username})",
-      { follower_username: req.params.follower_username, followed_username: req.params.followed_username }
+      { 
+        follower_username: req.user.username, 
+        followed_username: req.params.followed_username 
+      }
     )
     .then(data => {
       res.status(200).json({
@@ -225,8 +228,8 @@ function getFollowing(req, res, next) {
 }
 
 
-// ADOPTABLES ===========================================================================
 
+// ADOPTABLES ===========================================================================
 function getAllAdoptables(req, res, next) {
   db.any('SELECT * FROM adoptables')
     .then( data => {
@@ -242,6 +245,85 @@ function getAllAdoptables(req, res, next) {
 }
 
 
+
+// AUTHENTICATION ======================================================================
+function registerUser(req, res, next) {
+  const hash = authHelpers.createHashPassword(req.body.password);
+  db
+    .none(
+      "INSERT INTO users (username, email, password_digest, bio, profile_pic) VALUES (${username}, $(email), ${password_digest}, ${bio}, ${profile_pic})",
+      {
+        username: req.body.username,
+        email: req.body.email,
+        password_digest: hash,
+        bio: req.body.bio,
+        profile_pic: req.body.profile_pic
+      }
+    )
+    .then(() => {
+      res.status(200).json({
+        message: "Registration successful."
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: `Registration Failed    `,
+        err
+      });
+    });
+}
+
+function logoutUser(req, res, next) {
+  req.logout();
+  res.status(200).send("Logged out successfully");
+}
+
+function getUser(req, res, next) {
+  db
+    .one("SELECT * FROM users WHERE username=${username}", {
+      username: req.user.username
+    })
+    .then(data => {
+      res.status(200).json({ user: data });
+    });
+}
+
+function getSingleUser(req, res, next) {
+  db
+    .one("SELECT * FROM users WHERE username=${username}", {
+      username: req.params.username
+    })
+    .then(data => {
+      res.status(200).json({ user: data });
+    });
+}
+
+function editUser(req, res, next) {
+  db
+    .none(
+      "UPDATE users SET email=${email}, bio=${bio}, profile_pic=${profile_pic} WHERE username=${username}",
+      {
+        email: req.body.email,
+        bio: req.body.bio,
+        profile_pic: req.body.profile_pic,
+        username: req.user.username
+      }
+    )
+    .then(() => {
+      res.status(200).json({
+        message: "successfully updated user"
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: 'Registration Failed',
+        err
+      });
+    });
+}
+
+
+
 module.exports = {
   getAllPhotos: getAllPhotos,
   getSinglePhoto: getSinglePhoto,
@@ -255,5 +337,10 @@ module.exports = {
   getFollowers: getFollowers,
   getFollowing: getFollowing,
   getFollowingCount: getFollowingCount,
-  getAllAdoptables: getAllAdoptables
+  getAllAdoptables: getAllAdoptables,
+  registerUser: registerUser,
+  logoutUser: logoutUser,
+  getUser: getUser,
+  getSingleUser: getSingleUser,
+  editUser: editUser
 };
