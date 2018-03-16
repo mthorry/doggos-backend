@@ -1,23 +1,26 @@
 var express = require('express');
 var router = express.Router();
-
 var db = require('../db/queries');
+const { loginRequired } = require("../auth/helpers");
 
 // Photos
 router.get('/api/:username/photos', db.getAllPhotos);
 router.get('/api/:username/photos/:photo_id', db.getSinglePhoto);
-router.post('/api/:username/photos/new', /* loginRequired, */ db.createPhoto);
+router.post('/api/:username/photos/new', loginRequired, db.createPhoto);
 router.put('/api/:username/photos/:photo_id', db.updatePhoto);
 router.delete('/api/:username/photos/:photo_id', db.removePhoto);
 
+// Feed
+router.get('/api/:username/feed', loginRequired, db.getUserFeed)
 
 // Likes
 router.get('/api/:username/photos/:photo_id/likes', db.getPhotoLikes);
-router.post('/api/:username/photos/:photo_id/likes', db.likePhoto);
+router.get('/api/likes', db.getAllPhotosLikes)
+router.post('/api/:username/photos/:photo_id/likes', loginRequired, db.likePhoto);
 
 
 // Follows
-router.post('/api/:followed_username/addFollower/:follower_username', /* loginRequired, */ db.addFollower)
+router.post('/api/:followed_username/addFollower', loginRequired, db.addFollower)
 router.get('/api/:username/followers/count', db.getFollowersCount)
 router.get('/api/:username/followers', db.getFollowers)
 router.get('/api/:username/following/count', db.getFollowingCount)

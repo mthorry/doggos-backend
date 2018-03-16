@@ -111,7 +111,7 @@ function getPhotoLikes(req, res, next) {
   let photo_id = parseInt(req.params.photo_id)
   db
     .one(
-      "SELECT Count(*) FROM photos JOIN likes ON likes.photo_id=photos.id WHERE likes.photo_id=$1",
+      "SELECT * FROM likes WHERE likes.photo_id=$1",
       photo_id
     )
     .then(data => {
@@ -129,6 +129,40 @@ function getPhotoLikes(req, res, next) {
     });
 }
 
+function getAllPhotosLikes(req, res, next) {
+  db
+  .any("SELECT * FROM likes ORDER BY likes.photo_id")
+  .then(data => {
+      res.status(200).json({
+        status: 'success',
+        likes: data
+      });
+    })
+    .catch(err => {
+      console.log(`Error`, err);
+      res.status(500).json({
+        status: 'Error',
+        data: err
+      });
+    });
+}
+
+function getUserFeed(req, res, next) {
+  db
+    .any(
+      "SELECT photos.url, users.username, photos.date_created, photos.id, photos.caption FROM follows JOIN photos ON follows.followed_username=photos.username JOIN users ON follows.followed_username=users.username WHERE follower_username=${user} ORDER BY photos.date_created DESC",
+      { user: req.user.username }
+    )
+    .then(data => {
+      res.status(200).json({
+        feed: data
+      });
+    })
+    .catch(err => {
+      console.log(`error rendering feed`, err);
+      feed: "No data found";
+    });
+}
 
 
 // FOLLOWS ===========================================================================
@@ -342,5 +376,7 @@ module.exports = {
   logoutUser: logoutUser,
   getUser: getUser,
   getSingleUser: getSingleUser,
-  editUser: editUser
+  editUser: editUser,
+  getUserFeed: getUserFeed,
+  getAllPhotosLikes: getAllPhotosLikes
 };
