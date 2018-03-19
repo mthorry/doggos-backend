@@ -147,6 +147,24 @@ function getAllPhotosLikes(req, res, next) {
     });
 }
 
+function removeLike(req, res, next) {
+  let photoId = parseInt(req.params.photo_id)
+  let username = req.user.username
+  db.result('DELETE FROM likes WHERE username = $1 AND photo_id = $2', [username, photoId])
+    .then( result => {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: `Removed ${result.rowCount} like`
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+
+// FEED ===========================================================================
 function getUserFeed(req, res, next) {
   db
     .any(
@@ -378,5 +396,6 @@ module.exports = {
   getSingleUser: getSingleUser,
   editUser: editUser,
   getUserFeed: getUserFeed,
-  getAllPhotosLikes: getAllPhotosLikes
+  getAllPhotosLikes: getAllPhotosLikes,
+  removeLike: removeLike
 };

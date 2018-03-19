@@ -17,6 +17,7 @@ router.get('/api/:username/feed', loginRequired, db.getUserFeed)
 router.get('/api/:username/photos/:photo_id/likes', db.getPhotoLikes);
 router.get('/api/likes', db.getAllPhotosLikes)
 router.post('/api/:username/photos/:photo_id/likes', loginRequired, db.likePhoto);
+router.delete('/api/:username/photos/:photo_id/likes', loginRequired, db.removeLike);
 
 
 // Follows
