@@ -110,14 +110,14 @@ function likePhoto(req, res, next) {
 function getPhotoLikes(req, res, next) {
   let photo_id = parseInt(req.params.photo_id)
   db
-    .one(
+    .any(
       "SELECT * FROM likes WHERE likes.photo_id=$1",
       photo_id
     )
     .then(data => {
       res.status(200).json({
         status: 'success',
-        likes: data.count
+        likes: data
       });
     })
     .catch(err => {
