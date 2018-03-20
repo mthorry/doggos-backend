@@ -129,9 +129,11 @@ function getPhotoLikes(req, res, next) {
     });
 }
 
-function getAllPhotosLikes(req, res, next) {
+function getAllLikes(req, res, next) {
+// function getAllPhotosWithLikes(req, res, next) {
   db
-  .any("SELECT * FROM likes ORDER BY likes.photo_id")
+  .any("SELECT likes.id, likes.username AS liker, likes.photo_id, photos.caption, photos.url, photos.user_id, photos.username FROM likes JOIN photos ON likes.photo_id=photos.id")
+  // .any("SELECT photos.id,  photos.caption, photos.url, photos.user_id, photos.username, array_agg(likes.username) AS likes FROM photos FULL JOIN likes ON likes.photo_id=photos.id GROUP BY photos.id")
   .then(data => {
       res.status(200).json({
         status: 'success',
@@ -396,6 +398,6 @@ module.exports = {
   getSingleUser: getSingleUser,
   editUser: editUser,
   getUserFeed: getUserFeed,
-  getAllPhotosLikes: getAllPhotosLikes,
+  getAllLikes: getAllLikes,
   removeLike: removeLike
 };
